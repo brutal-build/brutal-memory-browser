@@ -15,12 +15,12 @@ Stack: Vite 6 + React 19 + TypeScript + Tailwind v4.3 + sql.js (SQLite WASM) + z
 
 Design: Minimalist monospace — black background, white text, 2px borders, bracket-style buttons, zero border-radius.
 
-GitHub: https://github.com/brutal-build/brutal-memory-browser
+GitHub: https://github.com/brutal-build/brutal-memory
 Live demo: https://brutal-memory.vercel.app
 
 ```
-git clone https://github.com/brutal-build/brutal-memory-browser.git
-cd brutal-memory-browser
+git clone https://github.com/brutal-build/brutal-memory.git
+cd brutal-memory
 npm install
 npm run dev
 ```

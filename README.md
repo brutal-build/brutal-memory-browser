@@ -30,8 +30,8 @@ Minimalist monospace — black background, white text, 2px borders, bracket-styl
 ## Usage
 
 ```
-git clone https://github.com/brutal-build/brutal-memory-browser
-cd brutal-memory-browser
+git clone https://github.com/brutal-build/brutal-memory
+cd brutal-memory
 npm install
 npm run dev
 ```

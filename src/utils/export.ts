@@ -1,5 +1,5 @@
 import type { Session, Message } from '../types/db'
-import { formatDate, extractTextContent } from './format'
+import { formatDate, extractTextContent, sanitizeFilename } from './format'
 
 function sessionToMd(session: Session, messages: Message[]): string {
   const lines: string[] = []
@@ -26,9 +26,7 @@ function sessionToMd(session: Session, messages: Message[]): string {
   return lines.join('\n')
 }
 
-export function exportSessionMd(session: Session, messages: Message[]): string {
-  return sessionToMd(session, messages)
-}
+export { sessionToMd as exportSessionMd }
 
 export function exportSessionsJson(sessions: Session[]): string {
   return JSON.stringify(sessions, null, 2)
@@ -41,7 +39,7 @@ export async function exportAllMd(sessions: Session[], getMessages: (id: string)
   for (const session of sessions) {
     const messages = await getMessages(session.id)
     const md = sessionToMd(session, messages)
-    const safeName = (session.title || session.id).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 50)
+    const safeName = sanitizeFilename(session.title || session.id)
     zip.file(`${safeName}.md`, md)
   }
 

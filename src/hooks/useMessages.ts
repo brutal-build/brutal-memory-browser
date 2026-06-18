@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useStore } from '../store/useStore'
 import type { Message } from '../types/db'
+import { MESSAGES_QUERY } from '../utils/format'
 
 export function useMessages(sessionId: string | null) {
   const db = useStore((s) => s.db)
   const cacheMessages = useStore((s) => s.cacheMessages)
-  const clearMessagesCache = useStore((s) => s.clearMessagesCache)
   const cached = useStore((s) => sessionId ? s.messagesCache[sessionId] : undefined)
   const setError = useStore((s) => s.setError)
   const [localLoading, setLocalLoading] = useState(false)
@@ -14,28 +14,13 @@ export function useMessages(sessionId: string | null) {
     if (!db) return
     setLocalLoading(true)
     try {
-      const stmt = db.prepare(`
-        SELECT id, session_id, role, content, tool_calls, tool_name, timestamp, token_count, active
-        FROM messages
-        WHERE session_id = $sid AND active = 1
-        ORDER BY timestamp ASC
-      `)
+      const stmt = db.prepare(MESSAGES_QUERY)
       stmt.bind({ $sid: sid })
 
       const messages: Message[] = []
       while (stmt.step()) {
-        const row = stmt.getAsObject() as any
-        messages.push({
-          id: row.id,
-          session_id: row.session_id,
-          role: row.role,
-          content: row.content,
-          tool_calls: row.tool_calls,
-          tool_name: row.tool_name,
-          timestamp: row.timestamp,
-          token_count: row.token_count,
-          active: row.active,
-        })
+        const row = stmt.getAsObject()
+        messages.push({ ...row } as unknown as Message)
       }
       stmt.free()
 
@@ -52,12 +37,6 @@ export function useMessages(sessionId: string | null) {
     if (cached) return
     loadMessages(sessionId)
   }, [sessionId, cached, loadMessages])
-
-  useEffect(() => {
-    return () => {
-      if (sessionId) clearMessagesCache(sessionId)
-    }
-  }, [sessionId, clearMessagesCache])
 
   return {
     messages: cached || [],

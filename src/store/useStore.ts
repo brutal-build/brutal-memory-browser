@@ -9,13 +9,11 @@ interface AppState {
   loading: boolean
   error: string | null
 
-  // UI state
   searchQuery: string
   showArchived: boolean
   sourceFilter: string
   sortMode: SortMode
 
-  // Actions
   setDb: (db: any) => void
   setSessions: (sessions: Session[]) => void
   cacheMessages: (sessionId: string, messages: Message[]) => void
@@ -28,11 +26,9 @@ interface AppState {
   setSourceFilter: (f: string) => void
   setSortMode: (m: SortMode) => void
 
-  // Derived
   getFilteredSessions: () => Session[]
   getStats: () => SessionStats
   getSelectedSession: () => Session | null
-  getMessagesForSelected: () => Message[]
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -76,14 +72,9 @@ export const useStore = create<AppState>((set, get) => ({
     }
     if (searchQuery) {
       const q = searchQuery.toLowerCase()
-      filtered = filtered.filter((s) => {
-        const title = (s.title || '').toLowerCase()
-        if (title.includes(q)) return true
-        return false
-      })
+      filtered = filtered.filter((s) => (s.title || '').toLowerCase().includes(q))
     }
 
-    // Sort
     filtered = [...filtered]
     switch (sortMode) {
       case 'newest':
@@ -128,11 +119,5 @@ export const useStore = create<AppState>((set, get) => ({
     const { sessions, selectedSessionId } = get()
     if (!selectedSessionId) return null
     return sessions.find((s) => s.id === selectedSessionId) || null
-  },
-
-  getMessagesForSelected: () => {
-    const { messagesCache, selectedSessionId } = get()
-    if (!selectedSessionId) return []
-    return messagesCache[selectedSessionId] || []
   },
 }))

@@ -6,8 +6,6 @@ export function SessionDetails() {
 
   if (!session) return null
 
-  const rewinds = session.tool_call_count // approx
-
   return (
     <div className="border-l-2 border-white/10 p-6 text-sm font-mono space-y-3">
       <div className="text-white/50 text-xs mb-4">{'//'} Session Info</div>
@@ -48,7 +46,7 @@ export function SessionDetails() {
       </div>
       <div>
         <span className="text-white/40">[ Rewinds ]</span>
-        <span className="ml-2 text-white/80">{rewinds}</span>
+        <span className="ml-2 text-white/80">{session.tool_call_count}</span>
       </div>
     </div>
   )

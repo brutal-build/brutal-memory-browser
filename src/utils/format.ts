@@ -31,16 +31,6 @@ export function formatCount(n: number): string {
   return n.toLocaleString()
 }
 
-export function truncateTitle(content: string, max = 80): string {
-  const cleaned = content
-    .replace(/<[^>]*>/g, '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-  if (cleaned.length <= max) return cleaned
-  return cleaned.slice(0, max).trimEnd() + '…'
-}
-
 export function extractTextContent(content: string): string {
   if (!content) return ''
   try {
@@ -58,4 +48,15 @@ export function extractTextContent(content: string): string {
   } catch {
     return content
   }
+}
+
+export const MESSAGES_QUERY = `
+  SELECT id, session_id, role, content, tool_calls, tool_name, timestamp, token_count, active
+  FROM messages
+  WHERE session_id = $sid AND active = 1
+  ORDER BY timestamp ASC
+`
+
+export function sanitizeFilename(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 50)
 }

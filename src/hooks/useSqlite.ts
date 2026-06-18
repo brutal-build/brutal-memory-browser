@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import initSqlJs from 'sql.js'
 import { useStore } from '../store/useStore'
 
-let sqlJsReady = false
+let wasmLoadingPromise: Promise<void> | null = null
 let SQL: any = null
 
 export function useSqlite() {
@@ -14,14 +14,22 @@ export function useSqlite() {
   const setError = useStore((s) => s.setError)
 
   const loadWasm = useCallback(async () => {
-    if (sqlJsReady) return
+    if (wasmLoadingPromise) return wasmLoadingPromise
     setWasmLoading(true)
     setWasmError(null)
+    wasmLoadingPromise = (async () => {
+      try {
+        const init = await initSqlJs({
+          locateFile: (file: string) => `/${file}`,
+        })
+        SQL = init
+      } catch (err: any) {
+        wasmLoadingPromise = null
+        throw err
+      }
+    })()
     try {
-      SQL = await initSqlJs({
-        locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
-      })
-      sqlJsReady = true
+      await wasmLoadingPromise
     } catch (err: any) {
       setWasmError(err.message || 'Failed to load SQL.js WASM')
     } finally {
@@ -49,8 +57,6 @@ export function useSqlite() {
         return
       }
 
-      setDb(db)
-
       // Load sessions
       const rows = db.exec(`
         SELECT id, title, source, model, started_at, ended_at,
@@ -73,7 +79,9 @@ export function useSqlite() {
         archived: row[10] as number,
       })) || []
 
+      // Set both atomically so no component renders with db but no sessions
       setSessions(sessions)
+      setDb(db)
     } catch (err: any) {
       setError(err.message || 'Failed to open database')
     } finally {

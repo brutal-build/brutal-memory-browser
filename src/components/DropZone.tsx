@@ -48,7 +48,7 @@ export function DropZone({ onFile, loading, error, wasmLoading, wasmError }: Pro
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-black text-white font-mono">
         <div className="text-2xl mb-4">Loading database...</div>
-        <div className="text-sm text-white/60">Parsing {wasmLoading ? 'SQL.js WASM' : 'database file'}</div>
+        <div className="text-sm text-white/60">Parsing database file...</div>
       </div>
     )
   }

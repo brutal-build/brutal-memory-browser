@@ -1,0 +1,29 @@
+🚀 **Brutal Memory Browser** — Hermes Agent `state.db` viewer/explorer
+
+W pełni kliencka web app do przeglądania wszystkich rozmów z Hermes Agentem. Zero backendu, zero uploadów — przeciągasz `state.db` do przeglądarki i masz całą historię sesji.
+
+✨ **Funkcje:**
+• Drop & Browse — przeciągnij plik, od razu widzisz wszystkie sesje
+• Filtrowanie po źródle (tui, telegram, cron, discord…)
+• Search po tytule z debounce 300ms
+• Sortowanie: newest / oldest / most messages / most tokens
+• Szczegóły sesji: model, źródło, czas trwania, tokeny, tool calls
+• Podgląd rozmów: user / assistant / tool z parsowaniem JSON content
+• Eksport: pojedyncza sesja → .md, wszystkie → .json lub .zip z .md
+
+🎨 **Styl:** BRUTALIST — czarne tło, białe teksty, border-2, [ bracket buttons ], zero border-radius. Idealnie do Hermesowego klimatu.
+
+🔧 **Stack:** Vite 6 + React 19 + TS + Tailwind v4.3 + sql.js (SQLite WASM) + zustand
+
+📦 **GitHub:** github.com/brutal-build/brutal-memory-browser
+
+🖥️ **Live demo:** brutal-memory-browser.vercel.app
+
+```
+git clone https://github.com/brutal-build/brutal-memory-browser.git
+cd brutal-memory-browser
+npm install
+npm run dev
+```
+
+Wrzućcie swoje state.db i zobaczcie jak wygląda Wasza historia z Hermesem. Feedback mile widziany!

@@ -3,6 +3,7 @@ import { useMessages } from '../hooks/useMessages'
 import { MessageBubble } from './MessageBubble'
 import { BracketButton } from './shared/BracketButton'
 import { exportSessionMd, downloadBlob } from '../utils/export'
+import { sanitizeFilename } from '../utils/format'
 
 export function ChatView() {
   const selectedSessionId = useStore((s) => s.selectedSessionId)
@@ -21,7 +22,7 @@ export function ChatView() {
   const handleExportMd = () => {
     const md = exportSessionMd(session, messages)
     const blob = new Blob([md], { type: 'text/markdown' })
-    downloadBlob(blob, `${(session.title || session.id).replace(/[^a-zA-Z0-9_-]/g, '_')}.md`)
+    downloadBlob(blob, `${sanitizeFilename(session.title || session.id)}.md`)
   }
 
   return (

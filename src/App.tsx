@@ -10,6 +10,7 @@ import { ChatView } from './components/ChatView'
 import { SessionDetails } from './components/SessionDetails'
 import { BracketButton } from './components/shared/BracketButton'
 import { exportSessionsJson, exportAllMd, downloadBlob } from './utils/export'
+import { MESSAGES_QUERY } from './utils/format'
 
 function App() {
   const db = useStore((s) => s.db)
@@ -36,12 +37,7 @@ function App() {
   const handleExportAllMd = async () => {
     const loadMessagesForExport = async (sessionId: string) => {
       if (!db) return []
-      const stmt = db.prepare(`
-        SELECT id, session_id, role, content, tool_calls, tool_name, timestamp, token_count, active
-        FROM messages
-        WHERE session_id = $sid AND active = 1
-        ORDER BY timestamp ASC
-      `)
+      const stmt = db.prepare(MESSAGES_QUERY)
       stmt.bind({ $sid: sessionId })
       const msgs: any[] = []
       while (stmt.step()) msgs.push(stmt.getAsObject())

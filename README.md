@@ -47,7 +47,7 @@ No installation needed. Just drag your `state.db` file into the browser.
 ### 2. Local Development
 
 ```bash
-git clone https://github.com/PixelCodeGH/brutal-memory-browser.git
+git clone https://github.com/brutal-build/brutal-memory-browser.git
 cd brutal-memory-browser
 npm install
 npm run dev
